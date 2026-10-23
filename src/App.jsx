@@ -1,12 +1,11 @@
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-
-
 import { useState } from 'react';
 import './App.css';
 import StudentCard from "./components/StudentCard";
-import studentImage from "./assets/hero.png";
+
+
+import slimImg from './assets/licensed-image.webp';
+import mariemImg from './assets/images.webp';
+import ahmedImg from './assets/download.webp';
 
 const etudiants = [
   {
@@ -18,18 +17,18 @@ const etudiants = [
     anneeEtude: "2ème année",
     groupe: "GLSI 2",
     ville: "Mahdia",
-    image: studentImage,
+    image: slimImg,
   },
   {
-    prenom: "Sarra",
+    prenom: "ahmed",
     nom: "Trabelsi",
-    email: "sarra.trabelsi@gmail.com",
+    email: "ahmed.trabelsi@gmail.com",
     telephone: "+216 22 345 678",
     filiere: "Génie Logiciel et Systèmes d'Information",
     anneeEtude: "2ème année",
     groupe: "GLSI 1",
     ville: "Sousse",
-    image: studentImage,
+    image: ahmedImg,
   },
   {
     prenom: "Mariem",
@@ -40,9 +39,10 @@ const etudiants = [
     anneeEtude: "2ème année",
     groupe: "GLSI 2",
     ville: "Mahdia",
-    image: studentImage,
+    image: mariemImg,
   }
 ];
+
 
 function App() {
   return (
