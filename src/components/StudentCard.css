@@ -1,0 +1,35 @@
+button{
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 30px;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+button:hover{
+  background-color: #e10011;
+}
+
+.card{
+    background-color: #ffffff;
+}
+
+p{
+    color: #353435;
+}
+
+h2{
+    color: #e10011;
+}
+
+img{
+    border-radius: 15px;
+}
+

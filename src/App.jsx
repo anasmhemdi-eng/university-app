@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import StudentCard from "./components/StudentCard";
+import StudentCard from './components/StudentCard';
+import StudentForm from './components/StudentForm';
 
 import slimImg from './assets/licensed-image.webp';
 import mariemImg from './assets/images.webp';
@@ -10,75 +11,81 @@ function App() {
   const [etudiants, setEtudiants] = useState([
     {
       id: 1,
-      prenom: "Slim",
-      nom: "Boubaker",
-      email: "slimboubaker@gmail.com",
-      telephone: "+216 99 999 999",
+      prenom: 'Slim',
+      nom: 'Boubaker',
+      email: 'slimboubaker@gmail.com',
+      telephone: '+216 99 999 999',
       filiere: "Génie Logiciel et Systèmes d'Information",
-      anneeEtude: "2ème année",
-      groupe: "GLSI 2",
-      ville: "Mahdia",
+      anneeEtude: '2ème année',
+      groupe: 'GLSI 2',
+      ville: 'Mahdia',
       image: slimImg,
     },
     {
       id: 2,
-      prenom: "ahmed",
-      nom: "Trabelsi",
-      email: "ahmed.trabelsi@gmail.com",
-      telephone: "+216 22 345 678",
+      prenom: 'Ahmed',
+      nom: 'Trabelsi',
+      email: 'ahmed.trabelsi@gmail.com',
+      telephone: '+216 22 345 678',
       filiere: "Génie Logiciel et Systèmes d'Information",
-      anneeEtude: "2ème année",
-      groupe: "GLSI 1",
-      ville: "Sousse",
+      anneeEtude: '2ème année',
+      groupe: 'GLSI 1',
+      ville: 'Sousse',
       image: ahmedImg,
     },
     {
       id: 3,
-      prenom: "Mariem",
-      nom: "Khalfallah",
-      email: "mariem.khalfallah@gmail.com",
-      telephone: "+216 27 567 890",
+      prenom: 'Mariem',
+      nom: 'Khalfallah',
+      email: 'mariem.khalfallah@gmail.com',
+      telephone: '+216 27 567 890',
       filiere: "Génie Logiciel et Systèmes d'Information",
-      anneeEtude: "2ème année",
-      groupe: "GLSI 2",
-      ville: "Mahdia",
+      anneeEtude: '2ème année',
+      groupe: 'GLSI 2',
+      ville: 'Mahdia',
       image: mariemImg,
-    }
+    },
   ]);
 
+  const [filterText, setFilterText] = useState('');
+  const [etudiantAModifier, setEtudiantAModifier] = useState(null);
 
-  const [filterText, setFilterText] = useState("");
-
-
-  function ajouterEtudiant() {
-    const nouvelEtudiant = {
+  function ajouterEtudiant(nouvelEtudiant) {
+    const etudiantAvecId = {
+      ...nouvelEtudiant,
       id: Date.now(),
-      nom: "Ben Salem",
-      prenom: "Yassine",
-      email: "yassin.bensalem@gmail.com",
-      telephone: "+216 44 444 444",
-      filiere: "Génie Logiciel et Systèmes d'Information",
-      anneeEtude: "2ème année",
-      groupe: "GLSI 1",
-      ville: "Sfax",
-      image: slimImg,
+      image: nouvelEtudiant.image || slimImg,
     };
-    setEtudiants([...etudiants, nouvelEtudiant]);
+    setEtudiants((anciensEtudiants) => [...anciensEtudiants, etudiantAvecId]);
   }
 
+  function enregistrerModification(etudiantModifie) {
+    setEtudiants((anciensEtudiants) =>
+      anciensEtudiants.map((e) =>
+        e.id === etudiantModifie.id ? { ...e, ...etudiantModifie } : e
+      )
+    );
+    setEtudiantAModifier(null);
+  }
 
   function supprimerEtudiant(id) {
-    setEtudiants(etudiants.filter(e => e.id !== id));
+    setEtudiants((anciensEtudiants) => anciensEtudiants.filter((e) => e.id !== id));
+    if (etudiantAModifier?.id === id) {
+      setEtudiantAModifier(null);
+    }
   }
 
-  
-  function updatePrenom(id, newPrenom) {
-    setEtudiants(
-      etudiants.map(e => (e.id === id ? { ...e, prenom: newPrenom } : e))
+  function modifierEtudiant(etudiant) {
+    setEtudiantAModifier(etudiant);
+  }
+
+  function mettreAJourPrenom(id, nouveauPrenom) {
+    setEtudiants((anciensEtudiants) =>
+      anciensEtudiants.map((e) => (e.id === id ? { ...e, prenom: nouveauPrenom } : e))
     );
   }
 
-  const etudiantsFiltres = etudiants.filter(e =>
+  const etudiantsFiltres = etudiants.filter((e) =>
     e.filiere.toLowerCase().includes(filterText.toLowerCase())
   );
 
@@ -94,27 +101,23 @@ function App() {
         />
       </div>
 
+      <StudentForm
+        key={etudiantAModifier ? etudiantAModifier.id : 'nouveau'}
+        onAjouter={ajouterEtudiant}
+        etudiantAModifier={etudiantAModifier}
+        onModifierEtudiant={enregistrerModification}
+        onAnnulerModification={() => setEtudiantAModifier(null)}
+      />
+
       {etudiantsFiltres.map((etudiant) => (
         <StudentCard
           key={etudiant.id}
-          id={etudiant.id}
-          prenom={etudiant.prenom}
-          nom={etudiant.nom}
-          email={etudiant.email}
-          telephone={etudiant.telephone}
-          filiere={etudiant.filiere}
-          anneeEtude={etudiant.anneeEtude}
-          groupe={etudiant.groupe}
-          ville={etudiant.ville}
-          image={etudiant.image}
+          etudiant={etudiant}
           onDelete={supprimerEtudiant}
-          onUpdatePrenom={updatePrenom}
+          onModifier={modifierEtudiant}
+          onUpdatePrenom={mettreAJourPrenom}
         />
       ))}
-
-      <div className="actions" style={{ textAlign: 'center', marginTop: '20px' }}>
-        <button onClick={ajouterEtudiant}>+ ajouter un etudiant</button>
-      </div>
     </div>
   );
 }

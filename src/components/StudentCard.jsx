@@ -1,60 +1,74 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
+import './StudentCard.css';
 
-function StudentCard(props) {
-  const [showDetails, setShowDetails] = useState(true);
+function StudentCard({ etudiant, onDelete, onModifier, onUpdatePrenom }) {
+  const [visibility, setVisibility] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [prenom, setPrenom] = useState(props.prenom);
+  const [prenom, setPrenom] = useState(etudiant.prenom);
+
+  useEffect(() => {
+    setPrenom(etudiant.prenom);
+  }, [etudiant.prenom]);
 
   const handleSave = () => {
-    props.onUpdatePrenom(props.id, prenom);
+    onUpdatePrenom(etudiant.id, prenom);
     setIsEditing(false);
   };
 
   return (
     <div className="card" style={{ textAlign: 'center', marginTop: '50px', fontFamily: 'sans-serif' }}>
-      <img src={props.image} alt="Student Profile" width="120" />
-      <h1>Fiche étudiant</h1>
+      <img src={etudiant.image} alt={`${etudiant.prenom} ${etudiant.nom}`} width="120" />
+      <h2>Fiche étudiant</h2>
 
       {isEditing ? (
         <div style={{ marginBottom: '10px' }}>
-          <input 
-            type="text" 
-            value={prenom} 
-            onChange={(e) => setPrenom(e.target.value)} 
+          <input
+            type="text"
+            value={prenom}
+            onChange={(e) => setPrenom(e.target.value)}
           />
-          <button onClick={handleSave}>Enregistrer</button>
+          <button type="button" onClick={handleSave}>Enregistrer</button>
+          <button
+            type="button"
+            onClick={() => {
+              setPrenom(etudiant.prenom);
+              setIsEditing(false);
+            }}
+          >
+            Annuler
+          </button>
         </div>
       ) : (
         <p>
-          <strong>Nom & Prénom : </strong> {props.prenom} {props.nom}
+          <strong>Nom & Prénom : </strong> {etudiant.prenom} {etudiant.nom}
         </p>
       )}
 
-      {showDetails && (
+      {visibility && (
         <>
           <p>
             <strong>Email : </strong>
-            <a href={`mailto:${props.email}`}>{props.email}</a>
+            <a href={`mailto:${etudiant.email}`}>{etudiant.email}</a>
           </p>
-          <p><strong>Téléphone : </strong> {props.telephone}</p>
+          <p><strong>Téléphone : </strong> {etudiant.telephone}</p>
         </>
       )}
 
-      <p><strong>Filière : </strong> {props.filiere}</p>
-      <p><strong>Année : </strong> {props.anneeEtude}</p>
-      <p><strong>Groupe : </strong> {props.groupe}</p>
-      <p><strong>Ville : </strong> {props.ville}</p>
+      <p><strong>Filière : </strong> {etudiant.filiere}</p>
+      <p><strong>Année : </strong> {etudiant.anneeEtude}</p>
+      <p><strong>Groupe : </strong> {etudiant.groupe}</p>
+      <p><strong>Ville : </strong> {etudiant.ville}</p>
 
       <div style={{ marginTop: '15px', display: 'flex', gap: '8px', justifyContent: 'center' }}>
-        <button onClick={() => setShowDetails(!showDetails)}>
-          {showDetails ? 'Masquer les coordonnées' : 'Afficher les coordonnées'}
+        <button type="button" onClick={() => setVisibility((v) => !v)}>
+          {visibility ? 'Masquer les coordonnées' : 'Afficher les coordonnées'}
         </button>
 
-        <button onClick={() => setIsEditing(!isEditing)}>
-          {isEditing ? 'Annuler' : 'Modifier'}
+        <button type="button" onClick={() => onModifier(etudiant)}>
+          Modifier
         </button>
 
-        <button onClick={() => props.onDelete(props.id)} style={{ color: 'red' }}>
+        <button type="button" onClick={() => onDelete(etudiant.id)}>
           Supprimer
         </button>
       </div>
